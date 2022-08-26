@@ -11,14 +11,13 @@ from invoices.scripts import html_to_pdf
 
 def homepage(request):
     products = Product.objects.all()
+    invoices = [inv.get_invoice_file() for inv in Invoice.objects.all() if inv.get_invoice_file() != 'no file']
     if request.method == 'POST':
         form = InvoiceForm(request.POST)
         if form.is_valid():
             owner = form.cleaned_data['owner_name']
             pdf = html_to_pdf('invoice.html', context_dict={"owner": owner, "items": products})
             file = BytesIO(pdf.content)
-            for f in pdf:
-                print(f)
             invoice = Invoice.objects.create(owner_name=owner)
             invoice.invoice_file = File(file, 'invoice.pdf')
             invoice.save()
@@ -26,4 +25,4 @@ def homepage(request):
 
     else:
         form = InvoiceForm()
-    return render(request, 'invoices/index.html', {"form": form, "products": products})
+    return render(request, 'invoices/index.html', {"form": form, "products": products, "invoices": invoices})

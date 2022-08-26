@@ -18,5 +18,10 @@
         {{ form.as_p }}
         <input type="submit" value="Submit">
     </form>
+    {% for inv in invoices %}
+    <a href={{ inv }} style='display: block; margin-top: 1.5rem;'>
+        Invoice - {{ forloop.counter }}
+    </a>
+    {% endfor %}
 </body>
 </html>

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 def upload_to(self, filename):
-    print(filename)
     return f'invoices/{self.owner_name}/{filename}'
 
 class Invoice(models.Model):
@@ -27,15 +26,3 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class InvoiceItem(models.Model):
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    quantity = models.IntegerField()
-
-    def get_total_value(self):
-        return self.product.price * self.quantity
-
-    def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
